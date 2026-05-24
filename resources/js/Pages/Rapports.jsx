@@ -75,7 +75,6 @@ export default function Rapports() {
                     </button>
                 </div>
 
-                {/* Message de succès */}
                 {generated && (
                     <div className="mt-3 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-100 rounded-md px-3 py-2">
                         <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
@@ -118,15 +117,6 @@ export default function Rapports() {
 
             {/* Liste des rapports */}
             <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden">
-                {/* En-tête */}
-                <div className="hidden md:grid grid-cols-5 px-5 py-3 border-b border-zinc-100 text-xs font-medium text-zinc-400 uppercase tracking-widest">
-                    <span className="col-span-2">Rapport</span>
-                    <span>Type</span>
-                    <span>Date</span>
-                    <span>Action</span>
-                </div>
-
-                {/* Lignes */}
                 <div className="divide-y divide-zinc-100">
                     {filtered.length === 0 ? (
                         <div className="px-5 py-8 text-center text-sm text-zinc-400">
@@ -134,41 +124,26 @@ export default function Rapports() {
                         </div>
                     ) : (
                         filtered.map((rapport) => (
-                            <div key={rapport.id}>
-                                {/* Vue desktop */}
-                                <div className="hidden md:grid grid-cols-5 px-5 py-3 text-sm items-center hover:bg-zinc-50 transition-colors">
-                                    <div className="col-span-2">
-                                        <p className="text-zinc-800 font-medium">{rapport.titre}</p>
-                                        <p className="text-zinc-400 text-xs mt-0.5">{rapport.agence} — {rapport.taille}</p>
-                                    </div>
-                                    <span className={`text-xs font-medium px-2 py-1 rounded-full w-fit ${TYPE_BADGE[rapport.type]}`}>
-                                        {rapport.type}
-                                    </span>
-                                    <span className="text-zinc-500">{rapport.date}</span>
-                                    <div className="flex gap-2">
-                                        <button className="text-xs text-zinc-600 border border-zinc-200 px-2 py-1 rounded hover:bg-zinc-50 transition-colors">
-                                            Aperçu
-                                        </button>
-                                        <button className="text-xs text-white bg-[#1C1C1C] px-2 py-1 rounded hover:bg-zinc-700 transition-colors">
-                                            Exporter
-                                        </button>
-                                    </div>
+                            <div key={rapport.id} className="flex items-center justify-between px-5 py-4 hover:bg-zinc-50 transition-colors gap-4">
+                                {/* Infos rapport */}
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-zinc-800 truncate">{rapport.titre}</p>
+                                    <p className="text-xs text-zinc-400 mt-0.5">{rapport.agence} — {rapport.taille} — {rapport.date}</p>
                                 </div>
 
-                                {/* Vue mobile */}
-                                <div className="md:hidden px-4 py-3 hover:bg-zinc-50 transition-colors">
-                                    <div className="flex items-start justify-between gap-2 mb-1">
-                                        <p className="text-sm font-medium text-zinc-800">{rapport.titre}</p>
-                                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${TYPE_BADGE[rapport.type]}`}>
-                                            {rapport.type}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center justify-between mt-2">
-                                        <p className="text-xs text-zinc-400">{rapport.date} — {rapport.taille}</p>
-                                        <button className="text-xs text-white bg-[#1C1C1C] px-2 py-1 rounded">
-                                            Exporter
-                                        </button>
-                                    </div>
+                                {/* Badge type */}
+                                <span className={`text-xs font-medium px-2 py-1 rounded-full shrink-0 ${TYPE_BADGE[rapport.type]}`}>
+                                    {rapport.type}
+                                </span>
+
+                                {/* Actions */}
+                                <div className="flex gap-2 shrink-0">
+                                    <button className="text-xs text-zinc-600 border border-zinc-200 px-3 py-1.5 rounded hover:bg-zinc-50 transition-colors">
+                                        Aperçu
+                                    </button>
+                                    <button className="text-xs text-white bg-[#1C1C1C] px-3 py-1.5 rounded hover:bg-zinc-700 transition-colors">
+                                        Exporter
+                                    </button>
                                 </div>
                             </div>
                         ))
