@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alerte;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -10,6 +11,8 @@ class AlerteController extends Controller
 {
     public function index()
     {
+        AuditService::log('consultation', 'Alertes', 'Consultation de la liste des alertes');
+
         $alertes = Alerte::latest()->get();
 
         $stats = [
@@ -32,6 +35,12 @@ class AlerteController extends Controller
             'acquittee_par' => auth()->id(),
             'acquittee_le' => now(),
         ]);
+
+        AuditService::log(
+            'acquittement',
+            'Alertes',
+            "Alerte #{$alerte->id} acquittée : {$alerte->titre}"
+        );
 
         return back();
     }

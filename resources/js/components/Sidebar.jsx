@@ -1,12 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
 
 const navigation = [
-    { name: 'Dashboard', href: '/', icon: 'grid' },
-    { name: 'Opérations', href: '/operations', icon: 'activity' },
-    { name: 'Alertes', href: '/alertes', icon: 'bell' },
-    { name: 'Rapports', href: '/rapports', icon: 'file-text' },
-    { name: 'Messagerie', href: '/messagerie', icon: 'message-square' },
-    { name: 'Paramètres', href: '/parametres', icon: 'settings' },
+    { name: 'Dashboard', href: '/' },
+    { name: 'Opérations', href: '/operations' },
+    { name: 'Alertes', href: '/alertes' },
+    { name: 'Rapports', href: '/rapports' },
+    { name: 'Messagerie', href: '/messagerie' },
+    { name: 'Audit', href: '/audit' },
+    { name: 'Paramètres', href: '/parametres' },
 ];
 
 export default function Sidebar() {
@@ -24,18 +25,18 @@ export default function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 px-3 py-4 space-y-1">
                 {navigation.map((item) => {
-                    const isActive = url === item.href;
+                    const isActive = url === item.href || url.startsWith(item.href + '?');
                     return (
                         <Link
                             key={item.name}
                             href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                            className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                                 isActive
                                     ? 'bg-[#8B1A1A] text-white'
                                     : 'text-zinc-400 hover:text-white hover:bg-white/5'
                             }`}
                         >
-                            <span>{item.name}</span>
+                            {item.name}
                         </Link>
                     );
                 })}
