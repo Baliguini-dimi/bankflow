@@ -2,19 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\AlerteController;
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/operations', function () {
-        return Inertia::render('Operations');
-    })->name('operations');
+    Route::get('/operations', [TransactionController::class, 'index'])->name('operations');
 
-    Route::get('/alertes', function () {
-        return Inertia::render('Alertes');
-    })->name('alertes');
+    Route::get('/alertes', [AlerteController::class, 'index'])->name('alertes');
+    Route::post('/alertes/{alerte}/acquitter', [AlerteController::class, 'acquitter'])->name('alertes.acquitter');
 
     Route::get('/rapports', function () {
         return Inertia::render('Rapports');

@@ -1,14 +1,6 @@
 import { useState } from 'react';
+import { router } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
-
-const alertesInitiales = [
-    { id: 1, titre: 'Transaction suspecte détectée', agence: 'Yopougon', description: 'Virement de 15 000 000 FCFA hors plafond autorisé.', niveau: 'Critique', heure: '08:47', acquittee: false },
-    { id: 2, titre: 'Solde caisse insuffisant', agence: 'Adjamé', description: 'Le solde de caisse est en dessous du seuil minimum de 500 000 FCFA.', niveau: 'Critique', heure: '07:45', acquittee: false },
-    { id: 3, titre: 'Tentative de connexion échouée', agence: 'Cocody', description: '5 tentatives de connexion échouées sur le compte superviseur.', niveau: 'Avertissement', heure: '09:02', acquittee: false },
-    { id: 4, titre: 'Rapport journalier non soumis', agence: 'Marcory', description: "Le rapport de clôture d'hier n'a pas été soumis avant 20h00.", niveau: 'Avertissement', heure: '06:00', acquittee: false },
-    { id: 5, titre: 'Mise à jour système disponible', agence: 'Siège', description: 'Une mise à jour de sécurité est disponible pour le module de paiement.', niveau: 'Info', heure: '05:30', acquittee: false },
-    { id: 6, titre: 'Nouvelle agence connectée', agence: 'Abobo', description: "L'agence Abobo s'est connectée pour la première fois ce mois-ci.", niveau: 'Info', heure: '08:15', acquittee: true },
-];
 
 const NIVEAU_STYLES = {
     'Critique': 'bg-red-50 text-[#8B1A1A] border-red-100',
@@ -28,14 +20,14 @@ const NIVEAU_DOT = {
     'Info': 'bg-blue-500',
 };
 
-export default function Alertes() {
-    const [alertes, setAlertes] = useState(alertesInitiales);
+export default function Alertes({ alertes, stats }) {
     const [filtre, setFiltre] = useState('Toutes');
 
     const acquitter = (id) => {
-        setAlertes(prev =>
-            prev.map(a => a.id === id ? { ...a, acquittee: true } : a)
-        );
+        router.post(`/alertes/${id}/acquitter`, {}, {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     const filtered = alertes.filter((a) => {
@@ -44,17 +36,15 @@ export default function Alertes() {
         return a.niveau === filtre;
     });
 
-    const nonAcquittees = alertes.filter(a => !a.acquittee).length;
-
     return (
         <AppLayout title="Alertes">
             {/* Compteurs */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 {[
-                    { label: 'Total alertes', value: alertes.length },
-                    { label: 'Non acquittées', value: nonAcquittees },
-                    { label: 'Critiques', value: alertes.filter(a => a.niveau === 'Critique').length },
-                    { label: 'Avertissements', value: alertes.filter(a => a.niveau === 'Avertissement').length },
+                    { label: 'Total alertes', value: stats.total },
+                    { label: 'Non acquittées', value: stats.non_acquittees },
+                    { label: 'Critiques', value: stats.critiques },
+                    { label: 'Avertissements', value: stats.avertissements },
                 ].map((stat) => (
                     <div key={stat.label} className="bg-white border border-zinc-200 rounded-lg p-4">
                         <p className="text-xs text-zinc-400 uppercase tracking-widest mb-1">{stat.label}</p>
@@ -96,7 +86,6 @@ export default function Alertes() {
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-start gap-3">
-                                    {/* Point de couleur */}
                                     <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${NIVEAU_DOT[alerte.niveau]}`} />
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
@@ -107,12 +96,11 @@ export default function Alertes() {
                                         </div>
                                         <p className="text-xs opacity-80 mb-1">{alerte.description}</p>
                                         <p className="text-xs opacity-60">
-                                            {alerte.agence} — {alerte.heure}
+                                            {alerte.agence} — {new Date(alerte.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
                                 </div>
 
-                                {/* Bouton acquitter */}
                                 {!alerte.acquittee ? (
                                     <button
                                         onClick={() => acquitter(alerte.id)}
