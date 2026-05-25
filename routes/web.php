@@ -22,5 +22,8 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Messagerie');
     })->name('messagerie');
 });
+    Route::get('/parametres', function () {
+    return Inertia::render('Parametres');
+})->name('parametres');
 
 require __DIR__.'/auth.php';
