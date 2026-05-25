@@ -1,10 +1,37 @@
 import AppLayout from '@/Layouts/AppLayout';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+} from 'recharts';
 
-export default function Dashboard({ stats, dernieres_transactions }) {
-    const formatMontant = (montant) => {
-        return new Intl.NumberFormat('fr-FR').format(montant);
-    };
+const formatMontant = (montant) => {
+    return new Intl.NumberFormat('fr-FR').format(montant);
+};
 
+const TooltipCustom = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="bg-white border border-zinc-200 rounded-lg px-3 py-2 shadow-sm">
+                <p className="text-xs font-medium text-zinc-800 mb-1">{label}</p>
+                {payload.map((p) => (
+                    <p key={p.name} className="text-xs text-zinc-500">
+                        {p.name} : <span className="font-medium text-zinc-800">{p.name === 'Volume' ? formatMontant(p.value) + ' FCFA' : p.value}</span>
+                    </p>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
+
+export default function Dashboard({ stats, dernieres_transactions, graphique }) {
     return (
         <AppLayout title="Dashboard">
             {/* Cartes de statistiques */}
@@ -40,6 +67,78 @@ export default function Dashboard({ stats, dernieres_transactions }) {
                     <p className="text-2xl font-semibold text-zinc-900">
                         {stats.anomalies}
                     </p>
+                </div>
+            </div>
+
+            {/* Graphiques */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                {/* Courbe des transactions */}
+                <div className="bg-white border border-zinc-200 rounded-lg p-5">
+                    <h2 className="text-sm font-semibold text-zinc-800 mb-4">
+                        Transactions — 7 derniers jours
+                    </h2>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <AreaChart data={graphique}>
+                            <defs>
+                                <linearGradient id="colorTx" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#8B1A1A" stopOpacity={0.15} />
+                                    <stop offset="95%" stopColor="#8B1A1A" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+                            <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 11, fill: '#a1a1aa' }}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <YAxis
+                                tick={{ fontSize: 11, fill: '#a1a1aa' }}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Tooltip content={<TooltipCustom />} />
+                            <Area
+                                type="monotone"
+                                dataKey="transactions"
+                                name="Transactions"
+                                stroke="#8B1A1A"
+                                strokeWidth={2}
+                                fill="url(#colorTx)"
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* Barres des anomalies */}
+                <div className="bg-white border border-zinc-200 rounded-lg p-5">
+                    <h2 className="text-sm font-semibold text-zinc-800 mb-4">
+                        Anomalies — 7 derniers jours
+                    </h2>
+                    <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={graphique}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+                            <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 11, fill: '#a1a1aa' }}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <YAxis
+                                tick={{ fontSize: 11, fill: '#a1a1aa' }}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Tooltip content={<TooltipCustom />} />
+                            <Bar
+                                dataKey="anomalies"
+                                name="Anomalies"
+                                fill="#8B1A1A"
+                                radius={[4, 4, 0, 0]}
+                                opacity={0.8}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
 

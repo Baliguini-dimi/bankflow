@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Alerte;
 use Inertia\Inertia;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -21,9 +22,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Données du graphique — 7 derniers jours
+        $graphique = collect(range(6, 0))->map(function ($i) {
+            $date = Carbon::today()->subDays($i);
+            return [
+                'date' => $date->format('d/m'),
+                'transactions' => Transaction::whereDate('effectuee_le', $date)->count(),
+                'volume' => (float) Transaction::whereDate('effectuee_le', $date)->sum('montant'),
+                'anomalies' => Transaction::whereDate('effectuee_le', $date)->where('statut', 'Anomalie')->count(),
+            ];
+        })->values();
+
         return Inertia::render('Dashboard', [
             'stats' => $stats,
             'dernieres_transactions' => $dernieres_transactions,
+            'graphique' => $graphique,
         ]);
     }
 }
