@@ -19,6 +19,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rapports', function () {
         return Inertia::render('Rapports');
     })->name('rapports');
+
+    Route::get('/messagerie', function () {
+        return Inertia::render('Messagerie');
+    })->name('messagerie');
 });
 
 require __DIR__.'/auth.php';
