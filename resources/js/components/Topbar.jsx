@@ -1,6 +1,15 @@
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 
 export default function Topbar({ title }) {
+    const { auth } = usePage().props;
+
+    const initiales = auth.user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
     const deconnecter = () => {
         router.post('/logout');
     };
@@ -15,11 +24,11 @@ export default function Topbar({ title }) {
             {/* Profil utilisateur */}
             <div className="flex items-center gap-4">
                 <div className="text-right">
-                    <p className="text-sm font-medium text-zinc-800">Administrateur</p>
-                    <p className="text-xs text-zinc-400">Siège Abidjan</p>
+                    <p className="text-sm font-medium text-zinc-800">{auth.user.name}</p>
+                    <p className="text-xs text-zinc-400">{auth.user.email}</p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-[#8B1A1A] flex items-center justify-center">
-                    <span className="text-white text-xs font-semibold">AD</span>
+                    <span className="text-white text-xs font-semibold">{initiales}</span>
                 </div>
                 <button
                     onClick={deconnecter}
