@@ -12,9 +12,9 @@ class GrokService
 
     public function __construct()
     {
-        $this->apiKey = config('services.grok.key');
+        $this->apiKey = env('GROK_API_KEY', '');
         if (empty($this->apiKey)) {
-            abort(500, 'Clé API Groq non configurée.');
+            abort(500, 'Clé API non configurée.');
         }
     }
     public function chat(string $message, string $contexte = ''): string
