@@ -2,12 +2,13 @@ import { Link, usePage } from '@inertiajs/react';
 
 const navigation = [
     { name: 'Dashboard', href: '/' },
-    { name: 'Opérations', href: '/operations' },
+    { name: 'Operations', href: '/operations' },
     { name: 'Alertes', href: '/alertes' },
     { name: 'Rapports', href: '/rapports' },
     { name: 'Messagerie', href: '/messagerie' },
+    { name: 'Assistant IA', href: '/assistant' },
     { name: 'Audit', href: '/audit' },
-    { name: 'Paramètres', href: '/parametres' },
+    { name: 'Parametres', href: '/parametres' },
 ];
 
 export default function Sidebar() {

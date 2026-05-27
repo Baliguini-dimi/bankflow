@@ -7,6 +7,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AlerteController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ParametresController;
+use App\Http\Controllers\AssistantController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -36,6 +37,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messagerie', function () {
         return Inertia::render('Messagerie');
     })->name('messagerie');
+
+    Route::get('/assistant', [AssistantController::class, 'index'])->name('assistant');
+    Route::post('/assistant/chat', [AssistantController::class, 'chat'])->name('assistant.chat');
+    Route::get('/assistant/resume', [AssistantController::class, 'resumeJournalier'])->name('assistant.resume');
 
     Route::get('/parametres', [ParametresController::class, 'index'])->name('parametres');
     Route::put('/parametres/profil', [ParametresController::class, 'updateProfil'])->name('parametres.profil');
