@@ -16,13 +16,20 @@ class ParametresController extends Controller
         return Inertia::render('Parametres');
     }
 
-    public function updateProfil(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . Auth::id(),
-        ]);
+        public function updateProfil(Request $request)
+        {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . Auth::id(),
+            ]);
 
+            Auth::user()->update([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+
+            return back()->with('success_profil', 'Profil mis a jour avec succes.');
+        
         Auth::user()->update([
             'name' => $request->name,
             'email' => $request->email,

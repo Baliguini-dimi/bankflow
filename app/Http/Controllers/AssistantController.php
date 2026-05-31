@@ -24,15 +24,12 @@ class AssistantController extends Controller
 
         $grok = new GrokService();
 
-        // Contexte des données actuelles
         $contexte = "Transactions aujourd'hui : " . Transaction::whereDate('effectuee_le', today())->count() .
             ", Volume : " . Transaction::whereDate('effectuee_le', today())->sum('montant') . " FCFA" .
             ", Alertes ouvertes : " . Alerte::where('acquittee', false)->count() .
             ", Anomalies : " . Transaction::where('statut', 'Anomalie')->whereDate('effectuee_le', today())->count();
 
         $reponse = $grok->chat($request->message, $contexte);
-
-        AuditService::log('consultation', 'Assistant IA', 'Question : ' . substr($request->message, 0, 100));
 
         return response()->json(['reponse' => $reponse]);
     }
