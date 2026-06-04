@@ -1,59 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BankFlow — Plateforme de Supervision Bancaire
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Plateforme intelligente de supervision des opérations bancaires, développée avec Laravel 12, React et Inertia.js. Conçue pour répondre aux besoins des institutions financières d'Afrique de l'Ouest (zone UEMOA/BCEAO).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Demo en ligne
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**URL :** https://bankflow-afji.onrender.com
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Identifiants de démonstration :**
+| Champ | Valeur |
+|-------|--------|
+| Email | admin@bankflow.ci |
+| Mot de passe | password123 |
 
-## Learning Laravel
+> Le serveur peut mettre 30 à 50 secondes à démarrer lors de la première visite (plan gratuit Render). Patientez et actualisez la page.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Aperçu
 
-## Laravel Sponsors
+![Dashboard BankFlow](https://bankflow-afji.onrender.com)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+BankFlow permet à une équipe bancaire de superviser en temps réel l'ensemble des opérations de ses agences, de détecter les anomalies, de gérer les alertes et d'obtenir des analyses intelligentes via un assistant IA intégré.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Fonctionnalités
 
-## Contributing
+| Module | Description |
+|--------|-------------|
+| Dashboard | Graphiques temps réel — transactions, volumes, anomalies sur 7 jours |
+| Opérations | Tableau filtrable avec pagination — statuts Validé / En attente / Anomalie |
+| Alertes | Niveaux Critique / Avertissement / Info avec système d'acquittement |
+| Rapports | Génération et export CSV par agence, par type et par période |
+| Messagerie | Messagerie interne entre superviseurs et agences |
+| Assistant IA | Chat bancaire intelligent — analyse, résumé journalier, détection de risques |
+| Piste d'audit | Journal complet de toutes les actions utilisateurs |
+| Paramètres | Gestion du profil et des accès |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Stack technique
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Couche | Technologie |
+|--------|------------|
+| Backend | Laravel 12, PHP 8.2 |
+| Frontend | React 18, Inertia.js, TailwindCSS v4 |
+| UI Components | shadcn/ui |
+| Base de données | SQLite (MySQL en production) |
+| Intelligence artificielle | Groq API — Llama 3.3 70B |
+| Graphiques | Recharts |
+| Déploiement | Docker, Render |
+| Versioning | Git / GitHub |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Architecture du projet
+bankflow/
+├── app/
+│   ├── Http/Controllers/     # DashboardController, TransactionController...
+│   ├── Models/               # Transaction, Alerte, Message, AuditLog
+│   └── Services/             # GrokService (IA), AuditService (audit)
+├── resources/
+│   └── js/
+│       ├── Pages/            # Dashboard, Operations, Alertes, Rapports...
+│       ├── Components/       # Sidebar, Topbar
+│       └── Layouts/          # AppLayout
+├── database/
+│   ├── migrations/           # Structure des tables
+│   └── seeders/              # Données de démonstration
+├── routes/
+│   └── web.php               # Toutes les routes protégées
+└── Dockerfile                # Configuration Docker pour le déploiement
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Installation locale
+
+### Prérequis
+- PHP 8.2+
+- Composer
+- Node.js 20+
+- Git
+
+### Étapes
+
+```bash
+# Cloner le projet
+git clone https://github.com/Baliguini-dimi/bankflow.git
+cd bankflow
+
+# Installer les dépendances PHP
+composer install
+
+# Installer les dépendances JavaScript
+npm install --legacy-peer-deps
+
+# Configurer l'environnement
+cp .env.example .env
+php artisan key:generate
+
+# Configurer la base de données
+php artisan migrate --seed
+
+# Lancer le serveur
+php artisan serve
+```
+
+Dans un second terminal :
+```bash
+npm run dev
+```
+
+Accéder à **http://127.0.0.1:8000**
+
+### Variables d'environnement requises
+
+```env
+APP_KEY=           # Généré automatiquement
+DB_CONNECTION=sqlite
+GROK_API_KEY=      # Clé API Groq (console.groq.com)
+```
+
+---
+
+## Contexte et objectifs
+
+Ce projet a été développé pour démontrer la faisabilité d'une plateforme de supervision bancaire moderne, adaptée aux réalités des institutions financières d'Afrique de l'Ouest :
+
+- Montants en **FCFA**
+- Agences nommées d'après des communes d'**Abidjan**
+- Conformité au cadre réglementaire **BCEAO/UEMOA**
+- Interface entièrement en **français**
+- Assistant IA instruit sur le contexte bancaire ivoirien
+
+---
+
+## Auteur
+
+**Dimitri Nelson BALIGUINI DEMBA**
+Master Big Data & Intelligence Artificielle
+Institut Universitaire d'Abidjan — Côte d'Ivoire
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Dimitri_Nelson-blue)](https://www.linkedin.com/in/dimitri-nelson-baligini-demba-4b17b32ba)
+[![GitHub](https://img.shields.io/badge/GitHub-Baliguini--dimi-black)](https://github.com/Baliguini-dimi)
+
+---
+
+## Licence
+
+Projet open source — usage académique et démonstration professionnelle.
