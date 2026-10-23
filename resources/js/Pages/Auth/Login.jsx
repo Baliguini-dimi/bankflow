@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import PasswordInput from '@/Components/PasswordInput';
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -53,10 +54,12 @@ export default function Login() {
                             <label className="block text-xs font-medium text-zinc-400 uppercase tracking-widest mb-1">
                                 Mot de passe
                             </label>
-                            <input
-                                type="password"
+                            <PasswordInput
+                                id="password"
+                                name="password"
                                 value={data.password}
                                 onChange={e => setData('password', e.target.value)}
+                                autoComplete="current-password"
                                 className="w-full bg-[#1C1C1C] border border-white/10 text-white text-sm rounded-md px-3 py-2 focus:outline-none focus:border-[#8B1A1A] transition-colors"
                                 placeholder="••••••••"
                                 required

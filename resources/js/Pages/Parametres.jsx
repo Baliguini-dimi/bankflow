@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+import PasswordInput from '@/Components/PasswordInput';
 
 export default function Parametres() {
     const { auth } = usePage().props;
@@ -130,29 +131,35 @@ export default function Parametres() {
                     <form onSubmit={sauvegarderPassword} className="px-5 py-4 space-y-4">
                         <div>
                             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-1">Mot de passe actuel</label>
-                            <input
-                                type="password"
+                            <PasswordInput
+                                id="current_password"
+                                name="current_password"
                                 value={motDePasse.current_password}
                                 onChange={(e) => setMotDePasse({ ...motDePasse, current_password: e.target.value })}
                                 className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm text-zinc-800 focus:outline-none focus:border-zinc-400"
+                                autoComplete="current-password"
                             />
                         </div>
                         <div>
                             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-1">Nouveau mot de passe</label>
-                            <input
-                                type="password"
+                            <PasswordInput
+                                id="password"
+                                name="password"
                                 value={motDePasse.password}
                                 onChange={(e) => setMotDePasse({ ...motDePasse, password: e.target.value })}
                                 className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm text-zinc-800 focus:outline-none focus:border-zinc-400"
+                                autoComplete="new-password"
                             />
                         </div>
                         <div>
                             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-1">Confirmer le mot de passe</label>
-                            <input
-                                type="password"
+                            <PasswordInput
+                                id="password_confirmation"
+                                name="password_confirmation"
                                 value={motDePasse.password_confirmation}
                                 onChange={(e) => setMotDePasse({ ...motDePasse, password_confirmation: e.target.value })}
                                 className="w-full border border-zinc-200 rounded-md px-3 py-2 text-sm text-zinc-800 focus:outline-none focus:border-zinc-400"
+                                autoComplete="new-password"
                             />
                         </div>
                         <div className="flex items-center gap-3 pt-1">

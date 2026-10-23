@@ -24,23 +24,49 @@ Route::middleware(['auth'])->group(function () {
     })->name('rapports');
 
     Route::get('/rapports/exporter', function () {
-        $transactions = \App\Models\Transaction::all();
-        $csv = "Reference,Agence,Type,Montant,Statut,Date\n";
+        $transactions = \App\Models\Transaction::query()->orderBy('effectuee_le')->get();
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, "\xEF\xBB\xBF");
+        fputcsv($stream, ['Référence', 'Agence', 'Type', 'Montant', 'Statut', 'Date'], ';', '"', '');
+
+        $safeCell = static function ($value): string {
+            $value = (string) ($value ?? '');
+            if (preg_match('/^[\x00-\x20]*[=+@-]/u', $value)) {
+                $value = "'".$value;
+            }
+            return $value;
+        };
+
         foreach ($transactions as $tx) {
-            $csv .= "{$tx->reference},{$tx->agence},{$tx->type},{$tx->montant},{$tx->statut},{$tx->effectuee_le}\n";
+            fputcsv($stream, array_map($safeCell, [
+                $tx->reference,
+                $tx->agence,
+                $tx->type,
+                $tx->montant,
+                $tx->statut,
+                $tx->effectuee_le?->format('Y-m-d H:i:s'),
+            ]), ';', '"', '');
         }
-        return response($csv)
-            ->header('Content-Type', 'text/csv')
-            ->header('Content-Disposition', 'attachment; filename="rapport_bankflow.csv"');
-    })->name('rapports.exporter');
+
+        rewind($stream);
+        $csv = stream_get_contents($stream);
+        fclose($stream);
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="rapport_bankflow.csv"',
+            'Cache-Control' => 'no-store, private',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    })->middleware('throttle:10,1')->name('rapports.exporter');
 
     Route::get('/messagerie', function () {
         return Inertia::render('Messagerie');
     })->name('messagerie');
 
     Route::get('/assistant', [AssistantController::class, 'index'])->name('assistant');
-    Route::post('/assistant/chat', [AssistantController::class, 'chat'])->name('assistant.chat');
-    Route::get('/assistant/resume', [AssistantController::class, 'resumeJournalier'])->name('assistant.resume');
+    Route::post('/assistant/chat', [AssistantController::class, 'chat'])->middleware('throttle:10,1')->name('assistant.chat');
+    Route::get('/assistant/resume', [AssistantController::class, 'resumeJournalier'])->middleware('throttle:10,1')->name('assistant.resume');
 
     Route::get('/parametres', [ParametresController::class, 'index'])->name('parametres');
     Route::put('/parametres/profil', [ParametresController::class, 'updateProfil'])->name('parametres.profil');

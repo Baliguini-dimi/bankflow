@@ -19,6 +19,10 @@
 /storage/*.key
 /storage/pail
 /vendor
+AUDIT.md
+resumer.md
+package.json.bak
+package-lock.json.bak
 Homestead.json
 Homestead.yaml
 Thumbs.db

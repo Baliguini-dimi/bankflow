@@ -11,16 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // L'application tourne derrière le proxy HTTPS de l'hébergeur
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
-        ]);
-
-        $middleware->validateCsrfTokens(except: [
-            'assistant/chat',
-            'assistant/resume',
-            'parametres/profil',
-            'parametres/password',
-            'alertes/*/acquitter',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

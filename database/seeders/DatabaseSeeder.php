@@ -2,37 +2,39 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Transaction;
 use App\Models\Alerte;
 use App\Models\Message;
+use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Créer les utilisateurs
-        $admin = User::create([
-            'name' => 'Administrateur',
-            'email' => 'admin@bankflow.ci',
-            'password' => Hash::make('password123'),
-        ]);
+        $motDePasse = env('DEMO_PASSWORD');
 
-        $superviseur = User::create([
-            'name' => 'Superviseur Plateau',
-            'email' => 'plateau@bankflow.ci',
-            'password' => Hash::make('password123'),
-        ]);
+        if (! $motDePasse || strlen($motDePasse) < 12) {
+            $this->command?->error('Définis DEMO_PASSWORD (12 caractères minimum) avant de lancer le seeder.');
+            throw new \RuntimeException('DEMO_PASSWORD must contain at least 12 characters.');
+        }
 
-        $superviseur2 = User::create([
-            'name' => 'Superviseur Yopougon',
-            'email' => 'yopougon@bankflow.ci',
-            'password' => Hash::make('password123'),
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@bankflow.ci'],
+            ['name' => 'Administrateur', 'password' => Hash::make($motDePasse)]
+        );
 
-        // Créer les transactions
+        $superviseur = User::updateOrCreate(
+            ['email' => 'plateau@bankflow.ci'],
+            ['name' => 'Superviseur Plateau', 'password' => Hash::make($motDePasse)]
+        );
+
+        $superviseur2 = User::updateOrCreate(
+            ['email' => 'yopougon@bankflow.ci'],
+            ['name' => 'Superviseur Yopougon', 'password' => Hash::make($motDePasse)]
+        );
+
         $transactions = [
             ['reference' => 'TXN-00421', 'agence' => 'Plateau', 'type' => 'Virement', 'montant' => 2500000, 'statut' => 'Validé', 'effectuee_le' => now()->setTime(9, 14)],
             ['reference' => 'TXN-00420', 'agence' => 'Cocody', 'type' => 'Retrait', 'montant' => 780000, 'statut' => 'En attente', 'effectuee_le' => now()->setTime(9, 2)],
@@ -47,45 +49,47 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($transactions as $t) {
-            Transaction::create($t);
+            Transaction::updateOrCreate(['reference' => $t['reference']], $t);
         }
 
-        // Créer les alertes
-        $alertes = [
-            ['titre' => 'Transaction suspecte détectée', 'agence' => 'Yopougon', 'description' => 'Virement de 15 000 000 FCFA hors plafond autorisé.', 'niveau' => 'Critique', 'acquittee' => false],
-            ['titre' => 'Solde caisse insuffisant', 'agence' => 'Adjamé', 'description' => 'Le solde de caisse est en dessous du seuil minimum de 500 000 FCFA.', 'niveau' => 'Critique', 'acquittee' => false],
-            ['titre' => 'Tentative de connexion échouée', 'agence' => 'Cocody', 'description' => '5 tentatives de connexion échouées sur le compte superviseur.', 'niveau' => 'Avertissement', 'acquittee' => false],
-            ['titre' => 'Rapport journalier non soumis', 'agence' => 'Marcory', 'description' => "Le rapport de clôture d'hier n'a pas été soumis avant 20h00.", 'niveau' => 'Avertissement', 'acquittee' => false],
-            ['titre' => 'Mise à jour système disponible', 'agence' => 'Siège', 'description' => 'Une mise à jour de sécurité est disponible pour le module de paiement.', 'niveau' => 'Info', 'acquittee' => false],
-            ['titre' => 'Nouvelle agence connectée', 'agence' => 'Abobo', 'description' => "L'agence Abobo s'est connectée pour la première fois ce mois-ci.", 'niveau' => 'Info', 'acquittee' => true],
-        ];
+        if (Alerte::count() === 0) {
+            $alertes = [
+                ['titre' => 'Transaction suspecte détectée', 'agence' => 'Yopougon', 'description' => 'Virement de 15 000 000 FCFA hors plafond autorisé.', 'niveau' => 'Critique', 'acquittee' => false],
+                ['titre' => 'Solde caisse insuffisant', 'agence' => 'Adjamé', 'description' => 'Le solde de caisse est en dessous du seuil minimum de 500 000 FCFA.', 'niveau' => 'Critique', 'acquittee' => false],
+                ['titre' => 'Tentative de connexion échouée', 'agence' => 'Cocody', 'description' => '5 tentatives de connexion échouées sur le compte superviseur.', 'niveau' => 'Avertissement', 'acquittee' => false],
+                ['titre' => 'Rapport journalier non soumis', 'agence' => 'Marcory', 'description' => "Le rapport de clôture d'hier n'a pas été soumis avant 20h00.", 'niveau' => 'Avertissement', 'acquittee' => false],
+                ['titre' => 'Mise à jour système disponible', 'agence' => 'Siège', 'description' => 'Une mise à jour de sécurité est disponible pour le module de paiement.', 'niveau' => 'Info', 'acquittee' => false],
+                ['titre' => 'Nouvelle agence connectée', 'agence' => 'Abobo', 'description' => "L'agence Abobo s'est connectée pour la première fois ce mois-ci.", 'niveau' => 'Info', 'acquittee' => true],
+            ];
 
-        foreach ($alertes as $a) {
-            Alerte::create($a);
+            foreach ($alertes as $a) {
+                Alerte::create($a);
+            }
         }
 
-        // Créer les messages
-        Message::create([
-            'expediteur_id' => $superviseur->id,
-            'destinataire_id' => $admin->id,
-            'contenu' => 'Bonjour, ouverture de caisse effectuée. Solde : 2 500 000 FCFA.',
-            'lu' => true,
-            'lu_le' => now(),
-        ]);
+        if (Message::count() === 0) {
+            Message::create([
+                'expediteur_id' => $superviseur->id,
+                'destinataire_id' => $admin->id,
+                'contenu' => 'Bonjour, ouverture de caisse effectuée. Solde : 2 500 000 FCFA.',
+                'lu' => true,
+                'lu_le' => now(),
+            ]);
 
-        Message::create([
-            'expediteur_id' => $admin->id,
-            'destinataire_id' => $superviseur->id,
-            'contenu' => 'Bien reçu. Surveillez les virements au-dessus de 10M FCFA.',
-            'lu' => true,
-            'lu_le' => now(),
-        ]);
+            Message::create([
+                'expediteur_id' => $admin->id,
+                'destinataire_id' => $superviseur->id,
+                'contenu' => 'Bien reçu. Surveillez les virements au-dessus de 10M FCFA.',
+                'lu' => true,
+                'lu_le' => now(),
+            ]);
 
-        Message::create([
-            'expediteur_id' => $superviseur2->id,
-            'destinataire_id' => $admin->id,
-            'contenu' => 'Transaction suspecte signalée sur le compte 045-XXX.',
-            'lu' => false,
-        ]);
+            Message::create([
+                'expediteur_id' => $superviseur2->id,
+                'destinataire_id' => $admin->id,
+                'contenu' => 'Transaction suspecte signalée sur le compte 045-XXX.',
+                'lu' => false,
+            ]);
+        }
     }
 }
