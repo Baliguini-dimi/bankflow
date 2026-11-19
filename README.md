@@ -8,6 +8,7 @@ Plateforme intelligente de supervision des opérations bancaires, développée a
 
 **URL :** https://bankflow-afji.onrender.com
 **Démonstration publique :** https://bankflow-afji.onrender.com/demo
+**Centre de liens / contact :** https://links-dimitri.vercel.app
 
 > La page d'accueil et `/demo` présentent un aperçu public en lecture seule avec des données entièrement fictives. L'espace équipe reste protégé par connexion. Le serveur peut mettre 30 à 50 secondes à démarrer lors de la première visite (plan gratuit Render).
 
