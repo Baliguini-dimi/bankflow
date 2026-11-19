@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 
 const navigation = [
-    { name: 'Dashboard', href: '/' },
+    { name: 'Dashboard', href: '/dashboard' },
     { name: 'Operations', href: '/operations' },
     { name: 'Alertes', href: '/alertes' },
     { name: 'Rapports', href: '/rapports' },

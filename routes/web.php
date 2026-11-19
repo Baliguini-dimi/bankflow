@@ -3,12 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AdminRecoveryController;
+use App\Http\Controllers\DemoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AlerteController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ParametresController;
 use App\Http\Controllers\AssistantController;
+
+Route::get('/', DemoController::class)->name('home');
+Route::get('/demo', DemoController::class)->name('demo');
 
 Route::get('/temporary-admin-recovery', [AdminRecoveryController::class, 'show'])
     ->middleware('throttle:10,1')
@@ -18,7 +22,7 @@ Route::post('/temporary-admin-recovery', [AdminRecoveryController::class, 'recov
     ->name('admin.recovery.store');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/operations', [TransactionController::class, 'index'])->name('operations');
 

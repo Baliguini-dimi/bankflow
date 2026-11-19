@@ -99,6 +99,12 @@ export default function Login() {
                 <p className="text-center text-zinc-600 text-xs mt-6">
                     BankFlow v1.0 — Acces restreint
                 </p>
+                <p className="text-center text-sm text-zinc-400 mt-3">
+                    Vous découvrez BankFlow ?{' '}
+                    <a href="/demo" className="text-red-300 hover:text-white underline underline-offset-4">
+                        Voir la démonstration publique
+                    </a>
+                </p>
 
             </div>
         </div>
