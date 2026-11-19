@@ -8,13 +8,17 @@ Plateforme intelligente de supervision des opérations bancaires, développée a
 
 **URL :** https://bankflow-afji.onrender.com
 
-**Identifiants de démonstration :**
-| Champ | Valeur |
-|-------|--------|
-| Email | admin@bankflow.ci |
-| Mot de passe | password123 |
+> Le serveur peut mettre 30 à 50 secondes à démarrer lors de la première visite (plan gratuit Render). Patientez et actualisez la page. Aucun mot de passe de démonstration n'est publié; l'administrateur doit être provisionné pour le déploiement.
 
-> Le serveur peut mettre 30 à 50 secondes à démarrer lors de la première visite (plan gratuit Render). Patientez et actualisez la page.
+### Récupération ponctuelle du compte administrateur
+
+Le mécanisme de récupération est désactivé par défaut. À utiliser uniquement si l'application est déployée avec une base persistante :
+
+1. Dans les variables du service Render, définir `BANKFLOW_ADMIN_RECOVERY_ENABLED=true` et `BANKFLOW_ADMIN_RECOVERY_TOKEN` avec un jeton aléatoire d'au moins 32 caractères. Ne pas mettre le jeton dans une URL ni le publier.
+2. Déployer l'application, puis ouvrir `https://<votre-service>/temporary-admin-recovery` et saisir le jeton ainsi qu'un nouveau mot de passe temporaire (16 caractères minimum).
+3. La récupération ne peut être effectuée qu'une fois pour la base. Se connecter, changer le mot de passe depuis les paramètres, puis définir `BANKFLOW_ADMIN_RECOVERY_ENABLED=false` et supprimer `BANKFLOW_ADMIN_RECOVERY_TOKEN`.
+
+Le marqueur d'utilisation est stocké dans la base. Si le service utilise SQLite sur un système de fichiers éphémère, un redémarrage ou un redéploiement peut effacer le compte et le marqueur : configurer d'abord une base persistante. Ne pas exécuter le seeder de démonstration en production.
 
 ---
 

@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-   
+
+    'bankflow_admin_recovery' => [
+        'enabled' => env('BANKFLOW_ADMIN_RECOVERY_ENABLED', false),
+        'token' => env('BANKFLOW_ADMIN_RECOVERY_TOKEN'),
+    ],
 ];
